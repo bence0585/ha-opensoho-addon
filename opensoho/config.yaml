@@ -1,0 +1,19 @@
+name: OpenSOHO
+version: "1.0.0"
+slug: opensoho
+description: OpenWrt routerek központi kezelése és monitorozása (könnyű OpenWISP-alternatíva)
+url: https://github.com/rubenbe/opensoho
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+ports:
+  8090/tcp: 8090
+ports_description:
+  8090/tcp: OpenSOHO webes felület és a routerek kapcsolódási pontja
+webui: "http://[HOST]:[PORT:8090]/_/"
+options:
+  shared_secret: ""
+schema:
+  shared_secret: password

@@ -9,15 +9,17 @@ if [ -z "$SECRET" ]; then
   exit 1
 fi
 
-# Első indításkor az éles példány PocketBase mentéséből tölt (a /share-ből),
-# később a saját adatbázisával megy tovább.
+# Első indításkor az éles példány PocketBase mentéséből tölt. A mentés az
+# add-on saját konfig mappájában van (/config, a HA-n
+# /addon_configs/<slug>/), amit csak ez az add-on lát: titkokat tartalmaz.
+# Később a saját adatbázisával megy tovább.
 if [ ! -f /data/pb_data/data.db ]; then
-  if [ -n "$SEED" ] && [ -f "/share/$SEED" ]; then
-    echo "[OpenSOHO dev] Adatbázis betöltése: /share/$SEED"
+  if [ -n "$SEED" ] && [ -f "/config/$SEED" ]; then
+    echo "[OpenSOHO dev] Adatbázis betöltése: /config/$SEED"
     mkdir -p /data/pb_data
-    unzip -q "/share/$SEED" -d /data/pb_data
+    unzip -q "/config/$SEED" -d /data/pb_data
   else
-    echo "[OpenSOHO dev] Nincs mentés (/share/$SEED), üres adatbázissal indul."
+    echo "[OpenSOHO dev] Nincs mentés (/config/$SEED), üres adatbázissal indul."
   fi
 fi
 

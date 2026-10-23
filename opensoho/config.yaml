@@ -1,8 +1,8 @@
 name: OpenSOHO
-version: "1.0.0"
+version: "1.1.0"
 slug: opensoho
 description: OpenWrt routerek központi kezelése és monitorozása (könnyű OpenWISP-alternatíva)
-url: https://github.com/rubenbe/opensoho
+url: https://github.com/bence0585/opensoho
 arch:
   - amd64
   - aarch64

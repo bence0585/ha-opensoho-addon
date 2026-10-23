@@ -2,7 +2,7 @@
 # kliensek, DHCP-kezelés, helyes usteer-opciók). A commit rögzítve van, így a
 # build mindig ugyanazt a kódot adja.
 ARG OPENSOHO_REPO=https://github.com/bence0585/opensoho.git
-ARG OPENSOHO_REF=aaba53e0c4f063462eccfc98e8f18edf28ac2870
+ARG OPENSOHO_REF=48cb6f4b6522e44ca4b46b38c7a41d2aeeeed145
 
 FROM golang:1.27-alpine AS build
 ARG OPENSOHO_REPO

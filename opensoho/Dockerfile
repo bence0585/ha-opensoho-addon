@@ -1,8 +1,8 @@
-# OpenSOHO a bence0585/opensoho forkból, forrásból buildelve (vezetékes
+# OpenSOHO a bence0585/opensoho forkból, forrásból buildelve (forgalom, vezetékes
 # kliensek, DHCP-kezelés, helyes usteer-opciók). A commit rögzítve van, így a
 # build mindig ugyanazt a kódot adja.
 ARG OPENSOHO_REPO=https://github.com/bence0585/opensoho.git
-ARG OPENSOHO_REF=da9c53c7980688ff561b89940a76a23a1233d036
+ARG OPENSOHO_REF=aaba53e0c4f063462eccfc98e8f18edf28ac2870
 
 FROM golang:1.27-alpine AS build
 ARG OPENSOHO_REPO

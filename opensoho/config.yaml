@@ -1,5 +1,5 @@
 name: OpenSOHO
-version: "1.3.0"
+version: "1.3.1"
 slug: opensoho
 description: OpenWrt routerek központi kezelése és monitorozása (könnyű OpenWISP-alternatíva)
 url: https://github.com/bence0585/opensoho
@@ -13,6 +13,10 @@ ports:
 ports_description:
   8090/tcp: OpenSOHO webes felület és a routerek kapcsolódási pontja
 webui: "http://[HOST]:[PORT:8090]/_/"
+# The OpenSOHO (PocketBase) nightly backups stay out of the Home Assistant
+# backups, which already contain the live database.
+backup_exclude:
+  - "pb_data/backups/*"
 options:
   shared_secret: ""
 schema:

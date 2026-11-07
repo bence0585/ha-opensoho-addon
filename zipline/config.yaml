@@ -1,0 +1,22 @@
+name: Zipline
+version: "4.8.2-1"
+slug: zipline
+description: Képek és videoklipek megosztása Discord-beágyazással (ShareX / Flameshot feltöltő szerver)
+url: https://github.com/diced/zipline
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+init: false
+ports:
+  3000/tcp: 3010
+ports_description:
+  3000/tcp: Zipline webes felület és feltöltési API
+webui: "http://[HOST]:[PORT:3000]/"
+# The uploads live in /media/zipline so they can be reached over Samba and
+# do not bloat /data; the PostgreSQL database stays in /data (in HA backups).
+map:
+  - media:rw
+options: {}
+schema: {}

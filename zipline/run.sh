@@ -48,8 +48,14 @@ mkdir -p "$CORE_TEMP_DIRECTORY"
 
 stop() {
   log "Leállítás..."
-  [ -n "$ZL_PID" ] && kill -TERM "$ZL_PID" 2>/dev/null && wait "$ZL_PID" 2>/dev/null
-  su-exec postgres pg_ctl -D "$PGDATA" stop -m fast >/dev/null 2>&1 || true
+  if [ -n "$ZL_PID" ]; then
+    kill -TERM "$ZL_PID" 2>/dev/null || true
+    wait "$ZL_PID" 2>/dev/null || true
+  fi
+  # SIGINT = PostgreSQL "fast" shutdown (clean checkpoint, no recovery needed).
+  kill -INT "$PG_PID" 2>/dev/null || true
+  wait "$PG_PID" 2>/dev/null || true
+  log "Leállítva."
   exit 0
 }
 trap stop TERM INT
@@ -61,7 +67,7 @@ ZL_PID=$!
 
 # If either process dies, stop the other one too (the Supervisor watchdog restarts).
 while kill -0 "$ZL_PID" 2>/dev/null && kill -0 "$PG_PID" 2>/dev/null; do
-  sleep 5
+  sleep 1
 done
 log "Egy folyamat leállt, kilépés."
 stop

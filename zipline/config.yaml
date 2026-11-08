@@ -1,5 +1,5 @@
 name: Zipline
-version: "4.8.2-6"
+version: "4.8.2-7"
 slug: zipline
 description: Képek és videoklipek megosztása Discord-beágyazással (ShareX / Flameshot feltöltő szerver)
 url: https://github.com/diced/zipline
@@ -24,8 +24,12 @@ options:
   trust_proxy: true
   default_domain: ""
   cache_warmup: true
+  card_threshold_mb: 35
+  discord_prewarm_webhook: ""
 schema:
   return_https_urls: bool
   trust_proxy: bool
   default_domain: str?
   cache_warmup: bool?
+  card_threshold_mb: int(1,10000)?
+  discord_prewarm_webhook: password?

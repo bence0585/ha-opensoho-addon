@@ -169,12 +169,28 @@ async function discordPrewarm(name) {
       ready.add(name);
       saveReady();
       log(`előmelegítés ${name}: KÉSZ (${attempt}. próba) – mostantól videóként ágyazódik be`);
+      // "Ready" note in the private channel. <link> + SUPPRESS_EMBEDS so Discord
+      // does not unfurl (and remember) anything for the plain link here.
+      try {
+        await fetch(hook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: `✅ Kész, mehet Discordra: <${link}>`, flags: 4, allowed_mentions: { parse: [] } }),
+        });
+      } catch {}
       return;
     }
     log(`előmelegítés ${name}: ${attempt}. próba nem sikerült`);
     await sleep(20000);
   }
   log(`előmelegítés ${name}: feladva, kártya marad`);
+  try {
+    await fetch(hook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: `⚠️ Nem sikerült előmelegíteni, kártyaként ágyazódik be: <${link}>`, flags: 4, allowed_mentions: { parse: [] } }),
+    });
+  } catch {}
 }
 
 function namesFrom(obj, out = new Set()) {

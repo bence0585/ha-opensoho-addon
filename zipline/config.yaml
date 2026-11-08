@@ -1,5 +1,5 @@
 name: Zipline
-version: "4.8.2-7"
+version: "4.8.2-8"
 slug: zipline
 description: Képek és videoklipek megosztása Discord-beágyazással (ShareX / Flameshot feltöltő szerver)
 url: https://github.com/diced/zipline

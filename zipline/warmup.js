@@ -8,7 +8,7 @@ const log = (m) => console.log(`[Zipline] warm-up ${m}`);
 
 function findNames(obj, out = new Set()) {
   if (typeof obj === 'string') {
-    const re = new RegExp(`https?://[^/"\\s]+/u/([^"?\\s]+)`, 'g');
+    const re = new RegExp(`https?://[^/"\\s]+/(?:u|raw|view)/([^"?\\s]+)`, 'g');
     let m;
     while ((m = re.exec(obj))) out.add(decodeURIComponent(m[1]));
   } else if (obj && typeof obj === 'object') {
@@ -19,7 +19,7 @@ function findNames(obj, out = new Set()) {
 }
 
 async function warm(name) {
-  const url = `https://${DOMAIN}/u/${encodeURIComponent(name)}`;
+  const url = `https://${DOMAIN}/raw/${encodeURIComponent(name)}`;
   const t0 = Date.now();
   try {
     const res = await fetch(url, { headers: { 'User-Agent': 'zipline-warmup' } });
@@ -48,4 +48,4 @@ http
       setTimeout(() => names.forEach(warm), 1500);
     });
   })
-  .listen(3999, '127.0.0.1', () => log(`fogadó fut (https://${DOMAIN}/u/<fájl>)`));
+  .listen(3999, '127.0.0.1', () => log(`fogadó fut (https://${DOMAIN}/raw/<fájl>)`));

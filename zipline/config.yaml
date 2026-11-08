@@ -1,5 +1,5 @@
 name: Zipline
-version: "4.8.2-2"
+version: "4.8.2-3"
 slug: zipline
 description: Képek és videoklipek megosztása Discord-beágyazással (ShareX / Flameshot feltöltő szerver)
 url: https://github.com/diced/zipline
@@ -19,5 +19,11 @@ webui: "http://[HOST]:[PORT:3000]/"
 # do not bloat /data; the PostgreSQL database stays in /data (in HA backups).
 map:
   - media:rw
-options: {}
-schema: {}
+options:
+  return_https_urls: true
+  trust_proxy: true
+  default_domain: ""
+schema:
+  return_https_urls: bool
+  trust_proxy: bool
+  default_domain: str?

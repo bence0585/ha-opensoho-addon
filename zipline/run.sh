@@ -44,6 +44,13 @@ export DATABASE_URL="postgresql://zipline@127.0.0.1:5432/zipline"
 export DATASOURCE_TYPE=local
 export DATASOURCE_LOCAL_DIRECTORY="$UPLOADS"
 export CORE_TEMP_DIRECTORY=/media/zipline/.tmp
+
+# Behind the Cloudflare tunnel (HTTPS): return https:// links, trust X-Forwarded-*.
+OPTS=/data/options.json
+export CORE_RETURN_HTTPS_URLS="$(jq -r '.return_https_urls // true' "$OPTS")"
+export CORE_TRUST_PROXY="$(jq -r '.trust_proxy // true' "$OPTS")"
+DOMAIN="$(jq -r '.default_domain // empty' "$OPTS")"
+[ -n "$DOMAIN" ] && export CORE_DEFAULT_DOMAIN="$DOMAIN"
 mkdir -p "$CORE_TEMP_DIRECTORY"
 
 stop() {

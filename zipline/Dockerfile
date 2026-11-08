@@ -2,7 +2,7 @@
 # PostgreSQL in the same container so no extra add-on is needed.
 FROM ghcr.io/diced/zipline:4.8.2
 
-RUN apk add --no-cache postgresql18 postgresql18-client su-exec tini jq
+RUN apk add --no-cache postgresql18 postgresql18-client su-exec tini jq curl inotify-tools
 
 COPY run.sh /run.sh
 RUN chmod +x /run.sh

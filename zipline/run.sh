@@ -72,6 +72,27 @@ cd /zipline
 node --enable-source-maps build/server/index.js &
 ZL_PID=$!
 
+# Cache warm-up: right after an upload, fetch the file once through the public
+# domain (Cloudflare). With Tiered Cache this fills Cloudflare's upper tier, so
+# Discord's first fetch is fast and the video embed does not time out.
+WARMUP="$(jq -r '.cache_warmup // true' "$OPTS")"
+if [ "$WARMUP" = true ] && [ -n "$DOMAIN" ]; then
+  log "Cache warm-up bekapcsolva: https://$DOMAIN/u/<fájl>"
+  inotifywait -q -m -e close_write -e moved_to --format '%f' "$UPLOADS" | while read -r f; do
+    (
+      case "$f" in .*|*.tmp|*.part) exit 0 ;; esac
+      # Wait until Zipline serves the file locally (DB record committed).
+      i=0
+      until [ "$(curl -s -o /dev/null -w '%{http_code}' -r 0-0 "http://127.0.0.1:3000/u/$f")" = 206 ] \
+         || [ "$(curl -s -o /dev/null -w '%{http_code}' -r 0-0 "http://127.0.0.1:3000/u/$f")" = 200 ]; do
+        i=$((i + 1)); [ "$i" -gt 30 ] && exit 0; sleep 1
+      done
+      r="$(curl -s -o /dev/null -m 600 -w '%{http_code} %header{cf-cache-status} %{size_download}B %{time_total}s' "https://$DOMAIN/u/$f")"
+      log "warm-up $f: $r"
+    ) &
+  done &
+fi
+
 # If either process dies, stop the other one too (the Supervisor watchdog restarts).
 while kill -0 "$ZL_PID" 2>/dev/null && kill -0 "$PG_PID" 2>/dev/null; do
   sleep 1

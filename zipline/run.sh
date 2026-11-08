@@ -38,10 +38,8 @@ psql_q() { su-exec postgres psql -h 127.0.0.1 -U postgres -tAc "$1"; }
 [ "$(psql_q "SELECT 1 FROM pg_database WHERE datname='zipline'")" = 1 ] || psql_q "CREATE DATABASE zipline OWNER zipline"
 
 export CORE_SECRET="$(cat /data/core_secret)"
-export CORE_PORT=3001
-export CORE_HOSTNAME=127.0.0.1
-# The front proxy (server.js) and the HA/Cloudflared network are trusted.
-export CORE_TRUSTED_PROXIES=127.0.0.1,172.30.32.0/23
+export CORE_PORT=3000
+export CORE_HOSTNAME=0.0.0.0
 export DATABASE_URL="postgresql://zipline@127.0.0.1:5432/zipline"
 export DATASOURCE_TYPE=local
 export DATASOURCE_LOCAL_DIRECTORY="$UPLOADS"
@@ -69,23 +67,13 @@ stop() {
 }
 trap stop TERM INT
 
-export HTTP_WEBHOOK_ON_UPLOAD=http://127.0.0.1:3999/upload
-
 log "Indulás: http://<ha-ip>:3010 (első belépésnél hozd létre az admin fiókot)"
 cd /zipline
 node --enable-source-maps build/server/index.js &
 ZL_PID=$!
 
-# Front proxy on :3000 (link cards, Cloudflare warm-up, Discord pre-warm).
-ZP_DOMAIN="$DOMAIN" ZP_UPLOADS="$UPLOADS" \
-ZP_CARD_MB="$(jq -r '.card_threshold_mb // 35' "$OPTS")" \
-ZP_CF_WARMUP="$(jq -r '.cache_warmup // true' "$OPTS")" \
-ZP_PREWARM_WEBHOOK="$(jq -r '.discord_prewarm_webhook // empty' "$OPTS")" \
-  node /server.js &
-PX_PID=$!
-
 # If either process dies, stop the other one too (the Supervisor watchdog restarts).
-while kill -0 "$ZL_PID" 2>/dev/null && kill -0 "$PG_PID" 2>/dev/null && kill -0 "$PX_PID" 2>/dev/null; do
+while kill -0 "$ZL_PID" 2>/dev/null && kill -0 "$PG_PID" 2>/dev/null; do
   sleep 1
 done
 log "Egy folyamat leállt, kilépés."

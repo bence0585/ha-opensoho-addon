@@ -5,7 +5,6 @@ FROM ghcr.io/diced/zipline:4.8.2
 RUN apk add --no-cache postgresql18 postgresql18-client su-exec tini jq
 
 COPY run.sh /run.sh
-COPY server.js /server.js
 RUN chmod +x /run.sh
 
 ENTRYPOINT ["/sbin/tini", "--"]

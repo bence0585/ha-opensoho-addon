@@ -1,0 +1,20 @@
+name: Caddy LAN proxy
+version: "1.0.0"
+slug: caddy_lan
+description: Helyi (LAN) HTTPS reverse proxy a *.gbnc.hu nevekhez, Cloudflare DNS-challenge wildcard tanúsítvánnyal
+url: https://github.com/bence0585/ha-opensoho-addon
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+init: false
+timeout: 60
+ports:
+  443/tcp: 443
+ports_description:
+  443/tcp: HTTPS (csak LAN)
+options:
+  cloudflare_api_token: ""
+schema:
+  cloudflare_api_token: password

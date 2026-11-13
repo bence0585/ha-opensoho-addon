@@ -1,0 +1,97 @@
+# Generated: LAN-side reverse proxy for the *.gbnc.hu names that Cloudflare
+# tunnels normally serve. AdGuard rewrites these names to this add-on so LAN
+# clients skip the cloud round trip.
+{
+	auto_https disable_redirects
+	storage file_system /data/caddy
+}
+
+*.gbnc.hu {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+		resolvers 1.1.1.1
+	}
+	@md host md.gbnc.hu
+	handle @md {
+		reverse_proxy 192.168.1.11:5000
+	}
+	@lidl host lidl.gbnc.hu
+	handle @lidl {
+		reverse_proxy 192.168.1.11:8181
+	}
+	@wt host wt.gbnc.hu
+	handle @wt {
+		reverse_proxy 192.168.1.10:8001
+	}
+	@py host py.gbnc.hu
+	handle @py {
+		reverse_proxy 192.168.1.11:8000
+	}
+	@fs host fs.gbnc.hu
+	handle @fs {
+		reverse_proxy 192.168.1.10:8081
+	}
+	@dav host dav.gbnc.hu
+	handle @dav {
+		reverse_proxy 192.168.1.11:10080
+	}
+	@xampp host xampp.gbnc.hu
+	handle @xampp {
+		reverse_proxy 192.168.1.30:80
+	}
+	@infoc host infoc.gbnc.hu
+	handle @infoc {
+		reverse_proxy 192.168.1.11:6000
+	}
+	@seerr host seerr.gbnc.hu
+	handle @seerr {
+		reverse_proxy 192.168.1.10:5055
+	}
+	@jelly host jelly.gbnc.hu
+	handle @jelly {
+		reverse_proxy 192.168.1.10:8096
+	}
+	@radarr host radarr.gbnc.hu
+	handle @radarr {
+		reverse_proxy 192.168.1.10:7878
+	}
+	@qbit host qbit.gbnc.hu
+	handle @qbit {
+		reverse_proxy 192.168.1.10:8080
+	}
+	@sonarr host sonarr.gbnc.hu
+	handle @sonarr {
+		reverse_proxy 192.168.1.10:8989
+	}
+	@kviz host kviz.gbnc.hu
+	handle @kviz {
+		reverse_proxy 192.168.1.11:8088
+	}
+	@hajo host hajo.gbnc.hu
+	handle @hajo {
+		reverse_proxy 192.168.1.30:8765
+	}
+	@tan host tan.gbnc.hu
+	handle @tan {
+		reverse_proxy 192.168.1.11:5000
+	}
+	@soho host soho.gbnc.hu
+	handle @soho {
+		reverse_proxy 192.168.1.10:8090
+	}
+	@zip host zip.gbnc.hu
+	handle @zip {
+		reverse_proxy 192.168.1.10:3010
+	}
+	@home host home.gbnc.hu
+	handle @home {
+		reverse_proxy 192.168.1.10:8123
+	}
+	@vault host vault.gbnc.hu
+	handle @vault {
+		reverse_proxy 192.168.1.10:7277
+	}
+	handle {
+		respond "Ismeretlen host" 404
+	}
+}

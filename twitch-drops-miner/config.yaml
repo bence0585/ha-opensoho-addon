@@ -1,0 +1,21 @@
+name: Twitch Drops Miner
+version: "1.0.0"
+slug: twitch_drops_miner
+description: Twitch drop-ok automatikus gyűjtése (AFK), webes felülettel
+url: https://github.com/fireph/docker-twitch-drops-miner
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+init: false
+timeout: 60
+ports:
+  5800/tcp: 5800
+ports_description:
+  5800/tcp: Webes felület (Twitch bejelentkezés, játékok kiválasztása)
+webui: "http://[HOST]:[PORT:5800]/"
+options:
+  timezone: Europe/Budapest
+schema:
+  timezone: str

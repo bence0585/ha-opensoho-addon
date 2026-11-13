@@ -13,3 +13,8 @@ Wrapper for [OpenSOHO](https://github.com/rubenbe/opensoho). Install OpenSOHO, s
 - Web UI: `http://<ha-ip>:3010/` — the first visit creates the admin account.
 - Uploads: `/media/zipline/uploads` (database: the add-on's `/data`).
 - For public links put it behind a reverse proxy or Cloudflare Tunnel (service `http://<ha-ip>:3010`).
+
+## Twitch Drops Miner
+
+Local-friendly wrapper around `dungfu/twitch-drops-miner` (web UI on port 5800).
+Config/cache live in `/data`. Do not expose port 5800 to the internet.

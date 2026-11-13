@@ -85,7 +85,7 @@
 	}
 	@home host home.gbnc.hu
 	handle @home {
-		reverse_proxy 192.168.1.10:8123
+		reverse_proxy homeassistant:8123
 	}
 	@vault host vault.gbnc.hu
 	handle @vault {

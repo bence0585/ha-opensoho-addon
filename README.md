@@ -18,3 +18,8 @@ Wrapper for [OpenSOHO](https://github.com/rubenbe/opensoho). Install OpenSOHO, s
 
 Local-friendly wrapper around `dungfu/twitch-drops-miner` (web UI on port 5800).
 Config/cache live in `/data`. Do not expose port 5800 to the internet.
+
+## GrubDrops
+
+Twitch/Kick drops miner with several accounts in one instance (web UI on host port 5802,
+data and master.key in `/data`). Twitch only; Kick needs Docker-socket sidecars and is not supported here.

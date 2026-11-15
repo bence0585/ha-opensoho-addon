@@ -1,0 +1,17 @@
+name: GrubDrops
+version: "2.3.2"
+slug: grubdrops
+description: Twitch (és Kick) drop-ok automatikus gyűjtése, több fiók egy példányban, webes felülettel
+url: https://github.com/grubdrops/grubdrops
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+init: false
+timeout: 60
+ports:
+  8080/tcp: 5802
+ports_description:
+  8080/tcp: Webes felület (első indításkor itt hozod létre az admin jelszót)
+webui: "http://[HOST]:[PORT:8080]/"

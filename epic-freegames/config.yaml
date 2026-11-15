@@ -1,0 +1,31 @@
+name: Epic Free Games
+version: "1.0.0"
+slug: epic_freegames
+description: Epic Games ingyenes játékok automatikus begyűjtése, több fiókkal (claabs/epicgames-freegames-node)
+url: https://github.com/claabs/epicgames-freegames-node
+arch:
+  - amd64
+startup: application
+boot: auto
+init: false
+# A Chromium-nak a /dev/shm miatt a README ajánlása szerint host IPC kell.
+host_ipc: true
+timeout: 60
+ports:
+  3000/tcp: 3011
+ports_description:
+  3000/tcp: Webes portál (eszközkódos bejelentkezés, csak ütemezett futás alatt él)
+webui: "http://[HOST]:[PORT:3000]/"
+options:
+  accounts: []
+  discord_webhook: ""
+  base_url: "http://192.168.1.10:3011"
+  country_code: HU
+  timezone: Europe/Budapest
+schema:
+  accounts:
+    - email
+  discord_webhook: str?
+  base_url: str
+  country_code: str
+  timezone: str

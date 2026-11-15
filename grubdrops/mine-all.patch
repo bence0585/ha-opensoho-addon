@@ -76,3 +76,44 @@ index 1f0f56b..63826f0 100644
  	})
  
  	now := time.Now()
+diff --git a/internal/runner/watch.go b/internal/runner/watch.go
+index c520be2..6c0abab 100644
+--- a/internal/runner/watch.go
++++ b/internal/runner/watch.go
+@@ -343,12 +343,14 @@ func (r *Runner) tick(ctx context.Context) error {
+ 			slog.Info("runner benefit vanished from inventory; treating as externally claimed", "kind", "state",
+ 				"account", r.cfg.AccountID, "benefit", benefit.ID, "benefit_name", benefit.Name,
+ 				"channel", handle.Channel, "last_progress_min", prev)
++			r.markExternallyClaimed(ctx, target)
+ 			r.skipCurrent(ctx, benefit.ID)
+ 			return nil
+ 		case n >= neverEnrolledThreshold && prev == 0:
+ 			slog.Warn("runner benefit never appeared in inventory (claimed or ghost); skipping", "kind", "state",
+ 				"account", r.cfg.AccountID, "benefit", benefit.ID, "benefit_name", benefit.Name,
+ 				"channel", handle.Channel, "ticks_without_progress", n)
++			r.markExternallyClaimed(ctx, target)
+ 			r.skipCurrent(ctx, benefit.ID)
+ 			return nil
+ 		}
+@@ -598,3 +600,21 @@ func (r *Runner) shouldNotifyProgress(curMin, reqMin int) bool {
+ 	}
+ 	return false
+ }
++
++// markExternallyClaimed logs t as collected when the inventory no longer shows
++// it, as if the user had pressed Mark as collected (fork patch). A drop the
++// account claimed elsewhere (another miner, the Twitch site) otherwise stays
++// "Skipped" and needs a manual click. A ghost drop is marked too; Mark as
++// uncollected undoes it.
++func (r *Runner) markExternallyClaimed(ctx context.Context, t plan.Target) {
++	if r.cfg.Claims == nil {
++		return
++	}
++	if err := r.cfg.Claims.RecordClaim(ctx, r.cfg.AccountID, t, ""); err != nil {
++		slog.Warn("runner mark externally claimed failed", "kind", "error",
++			"account", r.cfg.AccountID, "benefit", t.Benefit.ID, "err", err)
++		return
++	}
++	slog.Info("runner marked drop collected (gone from inventory)", "kind", "claim",
++		"account", r.cfg.AccountID, "benefit", t.Benefit.ID, "benefit_name", t.Benefit.Name)
++}

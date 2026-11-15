@@ -1,5 +1,6 @@
 # GrubDrops v2.3.2 + kis javitas (mine-all.patch): GRUB_MINE_ALL=1 mellett a
-# kivalasztott jatekok utan az osszes tobbi aktiv, mar linkelt kampanyt is banyassza.
+# kivalasztott jatekok utan az osszes tobbi aktiv, mar linkelt kampanyt is banyassza;
+# a keszletbol eltuno (mashol claimelt) dropot automatikusan begyujtottnek jeloli.
 FROM alpine/git AS src
 WORKDIR /src
 RUN git clone --depth 1 --branch v2.3.2 https://github.com/grubdrops/grubdrops.git .
@@ -22,7 +23,7 @@ COPY --from=src /src/go.mod /src/go.sum ./
 RUN go mod download
 COPY --from=src /src/ ./
 COPY --from=web /src/internal/web/dist ./internal/web/dist
-RUN CGO_ENABLED=0 go build -ldflags="-s -w -X main.version=v2.3.2-mineall" -o /out/grubdrops ./cmd/miner
+RUN CGO_ENABLED=0 go build -ldflags="-s -w -X main.version=v2.3.2-fork2" -o /out/grubdrops ./cmd/miner
 
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=build /out/grubdrops /grubdrops

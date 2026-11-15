@@ -1,5 +1,5 @@
 name: GrubDrops
-version: "2.3.2"
+version: "2.3.2-1"
 slug: grubdrops
 description: Twitch (és Kick) drop-ok automatikus gyűjtése, több fiók egy példányban, webes felülettel
 url: https://github.com/grubdrops/grubdrops

@@ -1,0 +1,78 @@
+diff --git a/internal/plan/plan.go b/internal/plan/plan.go
+index 6b8e213..db0f328 100644
+--- a/internal/plan/plan.go
++++ b/internal/plan/plan.go
+@@ -31,6 +31,9 @@ type Input struct {
+ 	NotLinked map[string]bool // benefit IDs whose claim the platform refused until linked
+ 	Order     []string        // session Up next override, benefit IDs
+ 	Priority  Priority        // campaign order; zero value is PriorityOrdered
++	// MineAll queues every other active campaign that needs no account link
++	// after all chosen games (fork patch, GRUB_MINE_ALL=1).
++	MineAll bool
+ }
+ 
+ // Priority picks how campaigns are ordered in the queue.
+@@ -162,7 +165,16 @@ func Build(in Input) Result {
+ 	var entries []entry
+ 	for _, c := range in.Campaigns {
+ 		rank, ok := Match(in.Games, c.Game)
+-		if !ok || (c.Status != "" && c.Status != "active") || c.Kind == "reward" {
++		if !ok {
++			// Fork patch: with MineAll, campaigns of games not on the list are
++			// mined after every chosen game, but only if the account is already
++			// linked, so no watch time is spent on drops that cannot be claimed.
++			if !in.MineAll || Unlinked(c) {
++				continue
++			}
++			rank = len(in.Games)
++		}
++		if (c.Status != "" && c.Status != "active") || c.Kind == "reward" {
+ 			continue
+ 		}
+ 		unlinked := Unlinked(c)
+diff --git a/internal/plan/plan_test.go b/internal/plan/plan_test.go
+index bbbad5a..c3ac1ad 100644
+--- a/internal/plan/plan_test.go
++++ b/internal/plan/plan_test.go
+@@ -387,3 +387,21 @@ func TestBuild_UpcomingNeverPicked(t *testing.T) {
+ 		t.Fatalf("blocked %v", res.Blocked)
+ 	}
+ }
++
++func TestBuild_MineAllQueuesOtherLinkedCampaignsLast(t *testing.T) {
++	unlinked := camp("u", "twitch", "Unlinked Game", ben("u1", 10))
++	unlinked.AccountLinked = false
++	unlinked.AccountLinkURL = "https://publisher.example/link"
++	in := Input{
++		Games: []Game{{Name: "Rust", Slug: "rust"}},
++		Campaigns: []platform.Campaign{
++			camp("other", "kick", "Other", ben("o1", 10)),
++			camp("rust", "kick", "Rust", ben("r1", 60)),
++			unlinked,
++		},
++	}
++	eq(t, ids(Build(in).Queue), []string{"r1"})
++	in.MineAll = true
++	got := Build(in).Queue
++	eq(t, ids(got), []string{"r1", "o1"})
++}
+diff --git a/internal/runner/runner.go b/internal/runner/runner.go
+index 1f0f56b..63826f0 100644
+--- a/internal/runner/runner.go
++++ b/internal/runner/runner.go
+@@ -7,6 +7,7 @@ import (
+ 	"fmt"
+ 	"log/slog"
+ 	"math/rand/v2"
++	"os"
+ 	"slices"
+ 	"sync"
+ 	"sync/atomic"
+@@ -821,6 +822,7 @@ func (r *Runner) scan(ctx context.Context, progress []platform.Progress, havePro
+ 		NotLinked: notLinked,
+ 		Order:     order,
+ 		Priority:  priority,
++		MineAll:   os.Getenv("GRUB_MINE_ALL") == "1",
+ 	})
+ 
+ 	now := time.Now()

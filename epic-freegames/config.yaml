@@ -1,5 +1,5 @@
 name: Epic Free Games
-version: "1.0.0"
+version: "1.0.1"
 slug: epic_freegames
 description: Epic Games ingyenes játékok automatikus begyűjtése, több fiókkal (claabs/epicgames-freegames-node)
 url: https://github.com/claabs/epicgames-freegames-node

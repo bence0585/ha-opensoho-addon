@@ -3,8 +3,8 @@
 set -e
 OPT=/data/options.json
 mkdir -p /data/config
-rm -rf /usr/app/config
-ln -s /data/config /usr/app/config
+# A /usr/app/config a kep VOLUME-ja (nem cserelheto), ezert a programot a /data/config-ra iranyitjuk.
+export CONFIG_DIR=/data/config
 
 N=$(jq '.accounts | length' "$OPT")
 if [ "$N" -eq 0 ]; then

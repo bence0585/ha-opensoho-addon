@@ -1,5 +1,5 @@
 name: Twitch Drops Miner 2
-version: "1.0.0"
+version: "1.1.0"
 slug: twitch_drops_miner_2
 description: Twitch drop-ok automatikus gyűjtése (AFK), webes felülettel
 url: https://github.com/fireph/docker-twitch-drops-miner
@@ -9,6 +9,8 @@ arch:
 startup: application
 boot: auto
 init: false
+map:
+  - share:rw
 timeout: 60
 ports:
   5800/tcp: 5801

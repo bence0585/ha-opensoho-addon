@@ -11,4 +11,11 @@ rm -rf /TwitchDropsMiner/config /TwitchDropsMiner/cache
 ln -s /data/config /TwitchDropsMiner/config
 ln -s /data/cache /TwitchDropsMiner/cache
 
+# IDEIGLENES export (2026-11-15): cookies.jar masolat a /share-be, GrubDrops-ba importalashoz.
+if [ -f /data/config/cookies.jar ]; then
+  mkdir -p /share/twitch-cookies
+  cp /data/config/cookies.jar /share/twitch-cookies/miner1-cookies.jar
+  chmod 600 /share/twitch-cookies/miner1-cookies.jar
+fi
+
 exec /entrypoint.sh "$@"

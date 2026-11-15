@@ -12,10 +12,15 @@ ln -s /data/config /TwitchDropsMiner/config
 ln -s /data/cache /TwitchDropsMiner/cache
 
 # IDEIGLENES export (2026-11-15): cookies.jar masolat a /share-be, GrubDrops-ba importalashoz.
-if [ -f /data/config/cookies.jar ]; then
+echo "[export] /data tartalma:"; find /data -maxdepth 3 -not -path '/data/cache/*' 2>/dev/null | head -40
+COOKIE=$(find /data /TwitchDropsMiner -maxdepth 3 -name cookies.jar 2>/dev/null | head -1)
+if [ -n "$COOKIE" ]; then
   mkdir -p /share/twitch-cookies
-  cp /data/config/cookies.jar /share/twitch-cookies/miner1-cookies.jar
+  cp "$COOKIE" /share/twitch-cookies/miner1-cookies.jar
   chmod 600 /share/twitch-cookies/miner1-cookies.jar
+  echo "[export] masolva: $COOKIE -> /share/twitch-cookies/miner1-cookies.jar"
+else
+  echo "[export] NEM talaltam cookies.jar-t"
 fi
 
 exec /entrypoint.sh "$@"

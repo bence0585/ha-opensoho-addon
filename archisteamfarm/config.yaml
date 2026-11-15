@@ -1,5 +1,5 @@
 name: ArchiSteamFarm
-version: "1.0.0"
+version: "1.0.1"
 slug: archisteamfarm
 description: Steam kártyagyűjtés (ArchiSteamFarm), több fiókkal, webes felülettel (ASF-ui)
 url: https://github.com/JustArchiNET/ArchiSteamFarm

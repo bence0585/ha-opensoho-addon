@@ -23,9 +23,3 @@ Config/cache live in `/data`. Do not expose port 5800 to the internet.
 
 Twitch/Kick drops miner with several accounts in one instance (web UI on host port 5802,
 data and master.key in `/data`). Twitch only; Kick needs Docker-socket sidecars and is not supported here.
-
-## Epic Free Games / ArchiSteamFarm
-
-`epic-freegames/`: claabs/epicgames-freegames-node, several Epic accounts from the `accounts` option
-(device-code login via the web portal on host port 3011). `archisteamfarm/`: ASF with ASF-ui on port 1242;
-refuses to start without `ipc_password`. Neither stores passwords in the add-on options.
